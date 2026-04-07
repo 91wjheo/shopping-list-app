@@ -225,7 +225,7 @@
   <script>
     const SUPABASE_URL = 'https://ophmtxmfpcephipgobbd.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9waG10eG1mcGNlcGhpcGdvYmJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzI3MDgsImV4cCI6MjA5MTE0ODcwOH0.NxweqnOLeb9nJCTv8DuacLs_gvam4t-_tg2lR8IqZSo';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let items = [];
 
@@ -236,7 +236,7 @@
     }
 
     async function loadItems() {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('shopping_items')
         .select('*')
         .order('created_at', { ascending: true });
@@ -287,7 +287,7 @@
       input.value = '';
       input.focus();
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('shopping_items')
         .insert({ text, checked: false })
         .select()
@@ -307,7 +307,7 @@
       const item = items.find(i => i.id === id);
       if (!item) return;
 
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from('shopping_items')
         .update({ checked: !item.checked })
         .eq('id', id);
@@ -322,7 +322,7 @@
     }
 
     async function deleteItem(id) {
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from('shopping_items')
         .delete()
         .eq('id', id);
@@ -340,7 +340,7 @@
       const checkedIds = items.filter(i => i.checked).map(i => i.id);
       if (checkedIds.length === 0) return;
 
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from('shopping_items')
         .delete()
         .in('id', checkedIds);
